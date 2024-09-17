@@ -29,6 +29,8 @@ switch($request_method) {
     case 'POST':
         if ($elements[0] == 'users' && empty($elements[1])) {
             $userController->create();
+        } elseif($elements[0]== 'login'){
+            $userController->login();
         }
         break;
     case 'PUT':

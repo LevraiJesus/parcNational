@@ -1,5 +1,6 @@
 <?php
 require_once '../models/User.php';
+use Firebase\JWT\JWT;
 
 class UserController {
     private $user;
@@ -69,6 +70,26 @@ class UserController {
         } else {
             http_response_code(503);
             echo json_encode(array("message" => "Unable to delete user."));
+        }
+    }
+
+    public function login() {
+        $data = json_decode(file_get_contents("php://input"));
+        
+        if (!empty($data->email) && !empty($data->password)) {
+            $user = $this->user->getUserByEmail($data->email);
+            
+            if ($user && password_verify($data->password, $user['password'])) {
+                $token = $this->user->generateJWT();
+                http_response_code(200);
+                echo json_encode(["message" => "Login successful", "token" => $token]);
+            } else {
+                http_response_code(401);
+                echo json_encode(["message" => "Login failed"]);
+            }
+        } else {
+            http_response_code(400);
+            echo json_encode(["message" => "Incomplete data"]);
         }
     }
 

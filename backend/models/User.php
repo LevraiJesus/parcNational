@@ -1,4 +1,6 @@
 <?php
+use Firebase\JWT\JWT;
+
 class User {
     private $conn;
     private $table_name = "users";
@@ -140,6 +142,21 @@ class User {
         $stmt->execute();
         
         return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public function generateJWT() {
+        $secretKey = $_ENV['JWT_SECRET'];
+        $issuedAt = time();
+        $expirationTime = $issuedAt + 3600; // Token valid for 1 hour
+
+        $payload = [
+            'user_id' => $this->id,
+            'email' => $this->email,
+            'iat' => $issuedAt,
+            'exp' => $expirationTime
+        ];
+
+        return JWT::encode($payload, $secretKey, 'HS256');
     }
     
     public function getAllUsers() {
