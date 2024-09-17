@@ -80,6 +80,14 @@ class UserController {
             $user = $this->user->getUserByEmail($data->email);
             
             if ($user && password_verify($data->password, $user['password'])) {
+                // Populate the User object with the retrieved data
+                $this->user->id = $user['id'];
+                $this->user->email = $user['email'];
+                $this->user->name = $user['name'];
+                $this->user->firstname = $user['firstname'];
+                $this->user->admin = $user['admin'];
+    
+                // Generate the token using the populated User object
                 $token = $this->user->generateJWT();
                 http_response_code(200);
                 echo json_encode(["message" => "Login successful", "token" => $token]);
@@ -92,6 +100,9 @@ class UserController {
             echo json_encode(["message" => "Incomplete data"]);
         }
     }
+    
+    
+    
 
     public function index() {
         $users = $this->user->getAllUsers();

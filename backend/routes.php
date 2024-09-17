@@ -47,7 +47,27 @@ switch($request_method) {
         break;
     case 'PUT':
         if ($elements[0] == 'users' && isset($elements[1])) {
-            $userController->update($elements[1]);
+            $headers = getallheaders();
+            $token = isset($headers['Authorization']) ? str_replace('Bearer ', '', $headers['Authorization']) : null;
+            
+            if ($token) {
+                $decoded = $jwtMiddleware->verifyToken($token);
+                if ($decoded) {
+                    $userId = $elements[1];
+                    if ($decoded->role === 'admin' || $decoded->user_id == $userId) {
+                    $userController->update($userId);
+                    } else {
+                        http_response_code(403);
+                        echo json_encode(["message" => "Forbidden: You can only update your own profile or must be an admin"]);
+                    }
+                } else {
+                    http_response_code(401);
+                    echo json_encode(["message" => "Unauthorized: Invalid token"]);
+                }
+            } else {
+                http_response_code(401);
+                echo json_encode(["message" => "Unauthorized: No token provided"]);
+            }
         }
         break;
     case 'DELETE':

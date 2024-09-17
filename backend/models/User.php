@@ -148,16 +148,20 @@ class User {
         $secretKey = $_ENV['JWT_SECRET'];
         $issuedAt = time();
         $expirationTime = $issuedAt + 3600; // Token valid for 1 hour
-
+    
         $payload = [
             'user_id' => $this->id,
             'email' => $this->email,
+            'name' => $this->name,
+            'firstname' => $this->firstname,
+            'role' => $this->admin ? 'admin' : 'user',
             'iat' => $issuedAt,
             'exp' => $expirationTime
         ];
-
+    
         return JWT::encode($payload, $secretKey, 'HS256');
     }
+    
     
     public function getAllUsers() {
         $query = "SELECT id, email, name, firstname, phoneNumber, browsingHistory, gpsHistory, admin FROM " . $this->table_name;
@@ -167,8 +171,6 @@ class User {
         
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
-    
-    
 
     private function sanitize(){
         $this->password = password_hash($this->password, PASSWORD_DEFAULT);
