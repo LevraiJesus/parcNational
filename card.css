@@ -1,0 +1,363 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #10B8D4;
+    margin: 0;
+    padding: 0;
+}
+
+h1 {
+    font-family: 'Roboto Condensed', sans-serif;
+    color: #FFF;
+    font-size: 2.3em;
+}
+
+em {
+    color: #232027;
+}
+
+.wrapper {
+    width: 40%;
+    margin: 50px auto;
+    
+}
+
+div.gallery {
+    margin-top: 30px;
+}
+
+div.gallery ul {
+    list-style-type: none;
+    margin-left: 75px;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+div.gallery ul li {
+    position: relative;
+    float: left;
+    width: 200px; /* Taille de base modifiée */
+    height: 200px; /* Taille de base modifiée */
+    margin: 20px;
+    padding: 10px;
+    z-index: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+div.gallery ul li img {
+    position: absolute;
+    left: 0;
+    top: 0;
+    border: 1px solid #dddddd;
+    padding: 5px;
+    width: 200px; /* Taille de base modifiée */
+    height: 200px; /* Taille de base modifiée */
+    background: #f0f0f0;
+    transition: all 0.3s ease-in-out;
+}
+
+div.gallery ul li:hover img {
+    width: 400px; /* Taille doublée */
+    height: 400px; /* Taille doublée */
+    margin-top: -100px; /* Centrer */
+    margin-left: -100px; /* Centrer */
+    top: 50%; /* Centrer */
+    left: 50%; /* Centrer */
+    z-index: -1;
+}
+
+div.gallery ul li:hover {
+    z-index: 5;
+}
+
+.btn {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 5px 10px;
+    background-color: #000000;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+div.gallery ul li:hover .btn {
+    opacity: 1;
+}
+
+/* Responsive hack */
+@media only screen and (min-width: 499px) and (max-width: 1212px) {
+    .wrapper {
+        width: 500px;
+    }
+}
+
+@media only screen and (max-width: 498px) {
+    .wrapper {
+        width: 300px;
+    }
+
+    div.gallery ul {
+        margin: 0;
+    }
+
+    div.gallery ul li {
+        width: 150px; /* Taille ajustée pour mobile */
+        height: 150px; /* Taille ajustée pour mobile */
+    }
+
+    div.gallery ul li img {
+        width: 150px; /* Taille ajustée pour mobile */
+        height: 150px; /* Taille ajustée pour mobile */
+    }
+
+    div.gallery ul li:hover img {
+        width: 300px; /* Taille doublée pour mobile */
+        height: 300px; /* Taille doublée pour mobile */
+        margin-top: -75px; /* Centrer */
+        margin-left: -75px; /* Centrer */
+        top: 50%; /* Centrer */
+        left: 50%; /* Centrer */
+    }
+}
+.video-container {
+    max-width: 80%;
+    width: 100%;
+    padding: 10px;
+    margin-left: 75%;
+    position:fixed;
+}
+.video2 {
+    max-width: 80%;
+    width: 100%;
+    padding: 10px;
+    position:fixed;
+}
+
+video {
+    width: 30%;
+    height: auto;
+    display: block;
+}
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap");
+:root {
+	--vs-primary: 29 92 255;
+}
+
+/*Dialog Styles*/
+dialog {
+	padding: 1rem 3rem;
+	background: white;
+	max-width: 400px;
+	padding-top: 2rem;
+	border-radius: 20px;
+	border: 0;
+	box-shadow: 0 5px 30px 0 rgb(0 0 0 / 10%);
+	animation: fadeIn 1s ease both;
+	&::backdrop {
+		animation: fadeIn 1s ease both;
+		background: rgb(255 255 255 / 40%);
+		z-index: 2;
+		backdrop-filter: blur(20px);
+	}
+	.x {
+		filter: grayscale(1);
+		border: none;
+		background: none;
+		position: absolute;
+		top: 15px;
+		right: 10px;
+		transition: ease filter, transform 0.3s;
+		cursor: pointer;
+		transform-origin: center;
+		&:hover {
+			filter: grayscale(0);
+			transform: scale(1.1);
+		}
+	}
+	h2 {
+		font-weight: 600;
+		font-size: 2rem;
+		padding-bottom: 1rem;
+	}
+	p {
+		font-size: 1rem;
+		line-height: 1.3rem;
+		padding: 0.5rem 0;
+		a {
+			&:visited {
+				color: rgb(var(--vs-primary));
+			}
+		}
+	}
+}
+
+
+
+button.primary {
+    display: inline-block;
+    font-size: 0.8rem;
+    color: #FDECFD !important;
+    background: rgb(var(--vs-primary) / 100%);
+    padding: 10px 2px;
+    border-radius: 17px;
+    background-color: #F5CF62;
+    transition: background-color 0.1s ease;
+    box-sizing: border-box;
+    transition: all 0.25s ease;
+    border: 0;
+    cursor: pointer;
+    box-shadow: 0 10px 20px -10px rgb(var(--vs-primary) / 50%);
+    position: absolute; /* Assurez-vous que le bouton est absolument positionné */
+    bottom: -30px; /* Placez le bouton en bas de chaque élément de la galerie */
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+button.primary:hover {
+    box-shadow: 0 20px 20px -10px rgb(var(--vs-primary) / 50%);
+    transform: translateY(-5px) translateX(-50%); /* Ajoutez translateX pour maintenir la position horizontale centrée */
+}
+
+
+@keyframes fadeIn {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+@import url('https://fonts.googleapis.com/css?family=Poppins:900i');
+
+
+.connexion {
+    text-align: center;
+    padding: 20px;
+}
+
+input {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 300px; /* Largeur par défaut */
+}
+
+.mail-input {
+    width: 300px; /* Largeur spécifique pour le champ email */
+}
+
+.password-input {
+    width: 300px; /* Largeur spécifique pour le champ mot de passe */
+}
+
+.wrapper {
+  display: flex;
+  justify-content: center;
+}
+
+.cta {
+    display: flex;
+    padding: 10px 45px;
+    text-decoration: none;
+    font-family: 'Poppins', sans-serif;
+    font-size: 40px;
+    color: rgba(255, 255, 255, 0.845);
+    background: #fdecfd6c;
+    transition: 1s;
+    box-shadow: 6px 6px 0 #F5CF62;
+    transform: skewX(-15deg);
+    position: relative; /* Ajouté pour permettre l'utilisation de top */
+    top: -20px; /* Ajustez cette valeur pour déplacer le bouton vers le haut */
+}
+
+.cta:focus {
+   outline: none; 
+}
+
+.cta:hover {
+    transition: 0.5s;
+    box-shadow: 5px 5px 0 #F5CF62;
+}
+
+.cta span:nth-child(2) {
+    transition: 0.5s;
+    margin-right: 0px;
+}
+
+.cta:hover  span:nth-child(2) {
+    transition: 0.5s;
+    margin-right: 45px;
+}
+
+span {
+    transform: skewX(15deg) 
+}
+
+span:nth-child(2) {
+    width: 10px;
+    height: 5px;
+    margin-left: 5px;
+    position: relative;
+    top: 12%;
+}
+
+/**************SVG****************/
+
+path.one {
+    transition: 0.4s;
+    transform: translateX(-60%);
+}
+
+path.two {
+    transition: 0.5s;
+    transform: translateX(-30%);
+}
+
+.cta:hover path.three {
+    animation: color_anim 1s infinite 0.2s;
+}
+
+.cta:hover path.one {
+    transform: translateX(0%);
+    animation: color_anim 1s infinite 0.6s;
+}
+
+.cta:hover path.two {
+    transform: translateX(0%);
+    animation: color_anim 1s infinite 0.4s;
+}
+
+/* SVG animations */
+
+@keyframes color_anim {
+    0% {
+        fill: #F5CF62;
+    }
+    50% {
+        fill: #ffffffbf;
+    }
+    100% {
+        fill: #F5CF62;
+    }
+}
+
+.icon {
+    width: 3px;
+    height: 3px;
+  }
+
+/* Ajout de la position relative et ajustement du top de la wrapper si nécessaire */
+.wrapper {
+    position: relative;
+    top: -10px; /* Ajustez cette valeur selon vos besoins */
+}
