@@ -28,7 +28,29 @@ header {
     margin-left: 3%;
     margin-top: 1%;
     position: fixed;
+    top: 10%;
   }
+
+  #historique {
+    background-color: #FFFFFF;
+    border-radius: 10px;
+    width: 300px;
+    height: 250px;
+    position: fixed; /* Le positionnement est fixe par rapport à la fenêtre */
+    top: 10%; /* Ajuste la distance par rapport au haut de la fenêtre */
+    right: 2%; /* Le place à 2% du bord droit de l'écran */
+    margin-top: 1%;
+}
+#favorie {
+  background-color: #FFFFFF;
+  border-radius: 10px;
+  width: 300px;
+  height: 250px;
+  position: fixed; /* Le positionnement est fixe par rapport à la fenêtre */
+  top: 10%; /* Ajuste la distance par rapport au haut de la fenêtre */
+  right: 2%; /* Le place à 2% du bord droit de l'écran */
+  margin-top: 3%;
+}
 
   footer h1 {
       font-size: 1em;
