@@ -13,7 +13,23 @@ header {
       padding: 10px 0;
       background-color: #ffffff40;
   }
-  
+  #banniere  img {
+    border-radius: 30px;
+    height: 200px;
+    margin-top: 2%;
+    margin-left: 1%;
+
+  }
+  #banniere {
+    background-color: #FFFFFF;
+    border-radius: 10px;
+    height: 250px;
+    width: 1000px;
+    margin-left: 3%;
+    margin-top: 1%;
+    position: fixed;
+  }
+
   footer h1 {
       font-size: 1em;
       margin: 0;
