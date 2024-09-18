@@ -41,16 +41,16 @@ header {
     right: 2%; /* Le place à 2% du bord droit de l'écran */
     margin-top: 1%;
 }
-#favorie {
+#Favori {
   background-color: #FFFFFF;
   border-radius: 10px;
   width: 300px;
-  height: 250px;
-  position: fixed; /* Le positionnement est fixe par rapport à la fenêtre */
-  top: 10%; /* Ajuste la distance par rapport au haut de la fenêtre */
-  right: 2%; /* Le place à 2% du bord droit de l'écran */
-  margin-top: 3%;
-}
+  height: 200px;
+  position: fixed;
+  top: calc(12% + 250px + 10px); /* Place #Favori juste en dessous de #historique */
+  right: 2%;
+  color: #000000;}
+
 
   footer h1 {
       font-size: 1em;
