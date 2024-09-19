@@ -22,11 +22,9 @@ class User {
     }
 
     public function create() {
-        error_log("User model: create method called");
         $query = "INSERT INTO " . $this->table_name . " SET email=:email, password=:password, name=:name, firstname=:firstname, phoneNumber=:phoneNumber, admin=:admin, created_at=NOW(), modified_at=NOW()";
     
         $stmt = $this->conn->prepare($query);
-        error_log("Prepared query: " . $query);
     
         $this->sanitize();
     
@@ -36,15 +34,11 @@ class User {
         $stmt->bindParam(":firstname", $this->firstname);
         $stmt->bindParam(":phoneNumber", $this->phoneNumber);
         $stmt->bindParam(":admin", $this->admin);
-    
-        error_log("Bound parameters: " . print_r([$this->email, $this->password, $this->name, $this->firstname, $this->phoneNumber, $this->admin], true));
-    
+        
         if ($stmt->execute()) {
-            error_log("User model: User created successfully");
             return true;
         }
     
-        error_log("User model: Failed to create user. Error: " . print_r($stmt->errorInfo(), true));
         return false;
     }
     
@@ -67,6 +61,8 @@ class User {
             $this->browsingHistory = $row['browsingHistory'];
             $this->gpsHistory = $row['gpsHistory'];
             $this->admin = $row['admin'];
+            $this->createdAt = $row['created_at'];
+            $this->modifiedAt = $row['modified_at'];
             return true;
         }
         

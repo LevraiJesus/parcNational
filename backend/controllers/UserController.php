@@ -10,9 +10,7 @@ class UserController {
     }
 
     public function create() {
-        error_log("UserController: create method called");
         $data = json_decode(file_get_contents("php://input"));
-        error_log("Received data: " . print_r($data, true));
         
         $this->user->email = $data->email;
         $this->user->password = $data->password;
@@ -22,11 +20,9 @@ class UserController {
         $this->user->admin = $data->admin ?? false;
     
         if($this->user->create()) {
-            error_log("UserController: User created successfully");
             http_response_code(201);
             echo json_encode(array("message" => "CONTROLLER : User was created."));
         } else {
-            error_log("UserController: Failed to create user");
             http_response_code(503);
             echo json_encode(array("message" => "CONTROLLER : Unable to create user."));
         }
@@ -80,14 +76,12 @@ class UserController {
             $user = $this->user->getUserByEmail($data->email);
             
             if ($user && password_verify($data->password, $user['password'])) {
-                // Populate the User object with the retrieved data
                 $this->user->id = $user['id'];
                 $this->user->email = $user['email'];
                 $this->user->name = $user['name'];
                 $this->user->firstname = $user['firstname'];
                 $this->user->admin = $user['admin'];
     
-                // Generate the token using the populated User object
                 $token = $this->user->generateJWT();
                 http_response_code(200);
                 echo json_encode(["message" => "Login successful", "token" => $token]);
