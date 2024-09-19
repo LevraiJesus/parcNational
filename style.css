@@ -1,3 +1,75 @@
+html{
+  height: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+html body{
+  height: 100%;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: row;
+  font-family: 'Noto Sans', sans-serif;
+}
+
+:root{
+  --main-color: rgb(6, 182, 212);
+  --secondary-color: rgb(252,211,77);
+}
+
+.signup-background{
+  flex-grow: 1;
+  background-image: url('https://www.cherifaistesvalises.com/wp-content/uploads/2017/06/shutterstock_578288941-768x512.jpg');
+  background-size: cover;
+}
+
+
+.signup-form{
+  background-color: var(--main-color);  
+  padding: 15px;
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+
+input{
+  background-color: var(--secondary-color);
+  border-radius: 3px;
+  border: none;
+  padding: 6px;
+}
+
+.form-group{
+  display: flex;
+  flex-direction: column;
+  margin: 15px 0;
+}
+
+.form-group.cgu{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
+
+.cgu a {
+  color: purple;
+  text-decoration:underline;
+}
+
+input[type="submit"]{
+  background-color: var(--secondary-color);
+  border: none;
+  padding: 10px;
+  border-radius: 3px;
+  cursor: pointer;
+  width: 50%;
+
+}
+
+label{
+  margin: 5px 0;
+}
+
 header {
     box-shadow: 0px 3px 5px black;
     
