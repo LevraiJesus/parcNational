@@ -15,7 +15,7 @@
 <body>
   <div class="signup-form">
     <h1>Bienvenue sur Parc Public</h1>
-    <form action="#" method="POST">
+    <form action="#" method="POST" id="signup-form">
 
       <div class="form-group">
         <label for="firstname">
@@ -56,11 +56,11 @@
         data-bs-content="
         Le mot de passe doit contenir au moins :
         <ul>
-          <li>8 caractères</li>
-          <li>une lettre majuscule</li>
-          <li>une lettre minuscule</li>
-          <li>un chiffre</li>
-          <li>un caractère spécial</li>
+          <li id='eight-characters' class='text-danger'>8 caractères</li>
+          <li id='uppercase-letter' class='text-danger'>une lettre majuscule</li>
+          <li id='lowercase-letter' class='text-danger'>une lettre minuscule</li>
+          <li id='number' class='text-danger'>un chiffre</li>
+          <li id='special-character' class='text-danger'>un caractère spécial</li>
         </ul>
         " >
       </div>
