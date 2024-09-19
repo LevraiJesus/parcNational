@@ -87,7 +87,6 @@ class Camping {
 
         $this->sanitize();
 
-        // Bind parameters
         $stmt->bindParam(":name", $this->name);
         $stmt->bindParam(":capacity", $this->capacity);
         $stmt->bindParam(":images", $this->images);
