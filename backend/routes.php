@@ -32,6 +32,14 @@ switch($request_method) {
             $campingController->index();
         } elseif ($elements[0] == 'campings' && isset($elements[1])) {
             $campingController->read($elements[1]);
+        } elseif ($elements[0] == 'trails' && empty($elements[1])) {
+            $trailController->index();
+        } elseif ($elements[0] == 'trails' && isset($elements[1])) {
+            $trailController->read($elements[1]);
+        } elseif ($elements[0] == 'trails' && $elements[1] == 'difficulty' && isset($elements[2])) {
+            $trailController->getByDifficulty($elements[2]);
+        } elseif ($elements[0] == 'trails' && $elements[1] == 'radius' && isset($elements[2]) && isset($elements[3]) && isset($elements[4])) {
+            $trailController->getWithinRadius($elements[2], $elements[3], $elements[4]);
         }
         break;
     case 'POST':
@@ -41,6 +49,8 @@ switch($request_method) {
             $userController->login();
         } elseif($elements[0] == 'campings' && empty($elements[1])) {
             $campingController->create();
+        } elseif ($elements[0] == 'trails' && empty($elements[1])) {
+            $trailController->create();
         }
         break;
     case 'PUT':
@@ -88,6 +98,28 @@ switch($request_method) {
                 http_response_code(401);
                 echo json_encode(["message" => "Unauthorized: No token provided"]);
             }
+        } elseif($elements[0] == 'trails' && isset($elements[1])) {
+            $headers = getallheaders();
+            $token = isset($headers['Authorization']) ? str_replace('Bearer ', '', $headers['Authorization']) : null;
+
+            if ($token) {
+                $decoded = $jwtMiddleware->verifyToken($token);
+                if ($decoded) {
+                    $trailId = $elements[1];
+                    if ($decoded->role === 'admin') {
+                        $trailController->update($trailId);
+                    } else {
+                        http_response_code(403);
+                        echo json_encode(["message" => "Forbidden: You must be an admin to update trails"]);
+                    }
+                } else {
+                    http_response_code(401);
+                    echo json_encode(["message" => "Unauthorized: Invalid token"]);
+                }
+            } else {
+                http_response_code(401);
+                echo json_encode(["message" => "Unauthorized: No token provided"]);
+            }
         }
         break;
     case 'DELETE':
@@ -106,6 +138,28 @@ switch($request_method) {
                     } else {
                         http_response_code(403);
                         echo json_encode(["message" => "Forbidden: You can only update your own profile or must be an admin"]);
+                    }
+                } else {
+                    http_response_code(401);
+                    echo json_encode(["message" => "Unauthorized: Invalid token"]);
+                }
+            } else {
+                http_response_code(401);
+                echo json_encode(["message" => "Unauthorized: No token provided"]);
+            }
+        } elseif($elements[0] == 'trails' && isset($elements[1])) {
+            $headers = getallheaders();
+            $token = isset($headers['Authorization']) ? str_replace('Bearer ', '', $headers['Authorization']) : null;
+
+            if ($token) {
+                $decoded = $jwtMiddleware->verifyToken($token);
+                if ($decoded) {
+                    $trailId = $elements[1];
+                    if ($decoded->role === 'admin') {
+                        $trailController->delete($trailId);
+                    } else {
+                        http_response_code(403);
+                        echo json_encode(["message" => "Forbidden: You must be an admin to delete trails"]);
                     }
                 } else {
                     http_response_code(401);
