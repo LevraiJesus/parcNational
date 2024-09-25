@@ -7,6 +7,8 @@ document.querySelector('#signup-form').addEventListener('submit', function(e) {
     formObject[key] = value;
   });
 
+  formObject['admin'] = false;
+
   const json = JSON.stringify(formObject);
 
   
