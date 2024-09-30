@@ -21,9 +21,12 @@ class TrailController {
         $this->trail->pointOfInterest = $data->pointOfInterest;
         $this->trail->camping = $data->camping;
         $this->trail->difficulty = $data->difficulty;
-        $this->trail->estimatedTime = $data->estimatedTime;
-        $this->trail->trailType = $data->trailType;
-        $this->trail->seasonAvailability = $data->seasonAvailability;
+        if(isset($_FILES['image'])) {
+            $uploadedFilePath = FileUploadHelper::uploadFile($_FILES['image'], 'uploads/trails/');
+            if ($uploadedFilePath) {
+                $this->trail->image_path = $uploadedFilePath;
+            }
+        }
 
         if($this->trail->create()) {
             http_response_code(201);
@@ -44,31 +47,46 @@ class TrailController {
     }
 
     public function update($id) {
+        ob_start();
+    
         $data = json_decode(file_get_contents("php://input"));
-        
-        $this->trail->id = $id;
-        $this->trail->name = $data->name;
-        $this->trail->longitudeStart = $data->longitudeStart;
-        $this->trail->longitudeEnd = $data->longitudeEnd;
-        $this->trail->latitudeStart = $data->latitudeStart;
-        $this->trail->latitudeEnd = $data->latitudeEnd;
-        $this->trail->distance = $data->distance;
-        $this->trail->heightDiff = $data->heightDiff;
-        $this->trail->pointOfInterest = $data->pointOfInterest;
-        $this->trail->camping = $data->camping;
-        $this->trail->difficulty = $data->difficulty;
-        $this->trail->estimatedTime = $data->estimatedTime;
-        $this->trail->trailType = $data->trailType;
-        $this->trail->seasonAvailability = $data->seasonAvailability;
-
-        if($this->trail->update()) {
-            http_response_code(200);
-            echo json_encode(array("message" => "Trail was updated."));
+    
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            $response = json_encode(array("message" => "Invalid JSON data"));
+            $statusCode = 400;
         } else {
-            http_response_code(503);
-            echo json_encode(array("message" => "Unable to update trail."));
+            $this->trail->id = $id;
+            $this->trail->name = $data->name ?? $this->trail->name;
+            $this->trail->longitudeStart = $data->longitudeStart ?? $this->trail->longitudeStart;
+            $this->trail->longitudeEnd = $data->longitudeEnd ?? $this->trail->longitudeEnd;
+            $this->trail->latitudeStart = $data->latitudeStart ?? $this->trail->latitudeStart;
+            $this->trail->latitudeEnd = $data->latitudeEnd ?? $this->trail->latitudeEnd;
+            $this->trail->distance = $data->distance ?? $this->trail->distance;
+            $this->trail->heightDiff = $data->heightDiff ?? $this->trail->heightDiff;
+            $this->trail->pointOfInterest = $data->pointOfInterest ?? $this->trail->pointOfInterest;
+            $this->trail->camping = $data->camping ?? $this->trail->camping;
+            $this->trail->difficulty = $data->difficulty ?? $this->trail->difficulty;
+            if(isset($_FILES['image'])) {
+                $uploadedFilePath = FileUploadHelper::uploadFile($_FILES['image'], 'uploads/trails/');
+                if ($uploadedFilePath) {
+                    $this->trail->image_path = $uploadedFilePath;
+                }
+            }
+    
+            if($this->trail->update()) {
+                $response = json_encode(array("message" => "Trail was updated."));
+                $statusCode = 200;
+            } else {
+                $response = json_encode(array("message" => "Unable to update trail."));
+                $statusCode = 503;
+            }
         }
+    
+        $output = ob_get_clean();
+        http_response_code($statusCode);
+        echo $response;
     }
+    
 
     public function delete($id) {
         if($this->trail->delete($id)) {

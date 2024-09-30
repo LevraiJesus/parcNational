@@ -13,6 +13,7 @@ class Camping {
     public $capacity;
     public $closeTrails;
     public $manager;
+    public $image_path;
     public $createdAt;
     public $modifiedAt;
 
@@ -21,26 +22,29 @@ class Camping {
     }
 
     public function create() {
-        $query = "INSERT INTO " . $this->table_name . " SET name=:name, longitude=:longitude, latitude=:latitude, description=:description, price=:price, capacity=:capacity, created_at=NOW(), modified_at=NOW()";
-
+        $query = "INSERT INTO " . $this->table_name . " SET name=:name, longitude=:longitude, latitude=:latitude, description=:description, price=:price, capacity=:capacity, closeTrails=:closeTrails, created_at=NOW(), modified_at=NOW()";
+    
         $stmt = $this->conn->prepare($query);
-
+    
         $this->sanitize();
-
-
+    
         $stmt->bindParam(":name", $this->name);
         $stmt->bindParam(":longitude", $this->longitude);
         $stmt->bindParam(":latitude", $this->latitude);
         $stmt->bindParam(":description", $this->description);
         $stmt->bindParam(":price", $this->price);
         $stmt->bindParam(":capacity", $this->capacity);
-
+        $closeTrailsString = is_array($this->closeTrails) ? implode(',', $this->closeTrails) : $this->closeTrails;
+        $stmt->bindParam(":closeTrails", $closeTrailsString);
+    
         if ($stmt->execute()) {
             return true;
         }
-
+    
         return false;
     }
+    
+    
 
     public function read($id) {
         $query = "SELECT * FROM " . $this->table_name . " WHERE id = ?";
@@ -60,7 +64,7 @@ class Camping {
             $this->image = $row['image'];
             $this->price = $row['price'];
             $this->capacity = $row['capacity'];
-            $this->closeTrails = $row['closeTrails'];
+            $this->closeTrails = $row['closeTrails'] ? explode(',', $row['closeTrails']) : null;
             $this->manager = $row['manager'];
             $this->createdAt = $row['created_at'];
             $this->modifiedAt = $row['modified_at'];
@@ -87,6 +91,9 @@ class Camping {
         $stmt->bindParam(":description", $this->description);
         $stmt->BindParam(":price", $this->price);
         $stmt->bindParam(":capacity", $this->capacity);
+        $closeTrailsString = is_array($this->closeTrails) ? implode(',', $this->closeTrails) : $this->closeTrails;
+        $stmt->bindParam(":closeTrails", $closeTrailsString);
+        $stmt->bindParam(":closeTrails", $this->closeTrails);
         $stmt->bindParam(":id", $this->id);
 
 
@@ -123,6 +130,10 @@ class Camping {
         $this->image = $this->image ? htmlspecialchars(strip_tags($this->image)) : null;
         $this->price = $this->price ? htmlspecialchars(strip_tags($this->price)) : null;
         $this->capacity = $this->capacity ? htmlspecialchars(strip_tags($this->capacity)) : null;
-        $this->closeTrails = $this->closeTrails ? htmlspecialchars(strip_tags($this->closeTrails)) : null;
+        if (is_array($this->closeTrails)) {
+            $this->closeTrails = json_encode($this->closeTrails);
+        } else {
+            $this->closeTrails = $this->closeTrails !== null ? htmlspecialchars(strip_tags($this->closeTrails)) : null;
+        }
     }
 }

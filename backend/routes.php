@@ -2,6 +2,9 @@
 require_once 'config/dp.php';
 require_once 'controllers/UserController.php';
 require_once 'controllers/CampingController.php';
+require_once 'controllers/TrailController.php';
+require_once 'controllers/BookingController.php';
+require_once 'controllers/PointOfInterestController.php';
 require_once 'middlewares/JWTMiddleware.php';
 
 $database = new Database();
@@ -9,6 +12,9 @@ $db = $database->getConnection();
 
 $userController = new UserController($db);
 $campingController = new CampingController($db);
+$trailController = new TrailController($db);
+$bookingController = new BookingController($db);
+$pointOfInterestController = new PointOfInterestController($db);
 $jwtMiddleware = new JWTMiddleware($_ENV['JWT_SECRET']);
 
 $request_method = $_SERVER['REQUEST_METHOD'];
@@ -40,6 +46,12 @@ switch($request_method) {
             $trailController->getByDifficulty($elements[2]);
         } elseif ($elements[0] == 'trails' && $elements[1] == 'radius' && isset($elements[2]) && isset($elements[3]) && isset($elements[4])) {
             $trailController->getWithinRadius($elements[2], $elements[3], $elements[4]);
+        } elseif ($elements[0] == 'bookings' && empty($elements[1])) {
+            $bookingController->index();
+        } elseif ($elements[0] == 'pointsofinterest' && empty($elements[1])) {
+            $pointOfInterestController->index();
+        } elseif ($elements[0] == 'pointsofinterest' && isset($elements[1])) {
+            $pointOfInterestController->read($elements[1]);
         }
         break;
     case 'POST':
@@ -48,9 +60,83 @@ switch($request_method) {
         } elseif($elements[0]== 'login'){
             $userController->login();
         } elseif($elements[0] == 'campings' && empty($elements[1])) {
-            $campingController->create();
+            $headers = getallheaders();
+            $token = isset($headers['Authorization']) ? str_replace('Bearer ', '', $headers['Authorization']) : null;
+
+            if ($token) {
+                $decoded = $jwtMiddleware->verifyToken($token);
+                if ($decoded) {
+                    if ($decoded->role === 'admin') {
+                        $campingController->create();
+                    } else {
+                        http_response_code(403);
+                        echo json_encode(["message" => "Forbidden: You must be an admin"]);
+                    }
+                } else {
+                    http_response_code(401);
+                    echo json_encode(["message" => "Unauthorized: Invalid token"]);
+                }
+            } else {
+                http_response_code(401);
+                echo json_encode(["message" => "Unauthorized: No token provided"]);
+            }
         } elseif ($elements[0] == 'trails' && empty($elements[1])) {
-            $trailController->create();
+            $headers = getallheaders();
+            $token = isset($headers['Authorization']) ? str_replace('Bearer ', '', $headers['Authorization']) : null;
+
+            if ($token) {
+                $decoded = $jwtMiddleware->verifyToken($token);
+                if ($decoded) {
+                    if ($decoded->role === 'admin') {
+                        $trailController->create();
+                    } else {
+                        http_response_code(403);
+                        echo json_encode(["message" => "Forbidden: You must be an admin"]);
+                    }
+                } else {
+                    http_response_code(401);
+                    echo json_encode(["message" => "Unauthorized: Invalid token"]);
+                }
+            } else {
+                http_response_code(401);
+                echo json_encode(["message" => "Unauthorized: No token provided"]);
+            }
+        } elseif ($elements[0] == 'bookings' && empty($elements[1])) {
+            $headers = getallheaders();
+            $token = isset($headers['Authorization']) ? str_replace('Bearer ', '', $headers['Authorization']) : null;
+            if ($token) {
+                $decoded = $jwtMiddleware->verifyToken($token);
+                if ($decoded) {
+                    $bookingController->create();
+                } else {
+                    http_response_code(401);
+                    echo json_encode(["message" => "Unauthorized: Invalid token"]);
+                }
+            } else {
+                http_response_code(401);
+                echo json_encode(["message" => "Unauthorized: No token provided"]);
+            }
+        } elseif ($elements[0] == 'pointsofinterest' && empty($elements[1])) {
+            $headers = getallheaders();
+            $token = isset($headers['Authorization']) ? str_replace('Bearer ', '', $headers['Authorization']) : null;
+    
+            if ($token) {
+                $decoded = $jwtMiddleware->verifyToken($token);
+                if ($decoded) {
+                    if ($decoded->role === 'admin') {
+                        $pointOfInterestController->create();
+                    } else {
+                        http_response_code(403);
+                        echo json_encode(["message" => "Forbidden: You must be an admin"]);
+                    }
+                } else {
+                    http_response_code(401);
+                    echo json_encode(["message" => "Unauthorized: Invalid token"]);
+                }
+            } else {
+                http_response_code(401);
+                echo json_encode(["message" => "Unauthorized: No token provided"]);
+            }
         }
         break;
     case 'PUT':
@@ -120,6 +206,50 @@ switch($request_method) {
                 http_response_code(401);
                 echo json_encode(["message" => "Unauthorized: No token provided"]);
             }
+        } elseif($elements[0] == 'bookings' && isset($elements[1])) {
+            $headers = getallheaders();
+            $token = isset($headers['Authorization']) ? str_replace('Bearer ', '', $headers['Authorization']) : null;
+
+            if ($token) {
+                $decoded = $jwtMiddleware->verifyToken($token);
+                if ($decoded) {
+                    $bookingId = $elements[1];
+                    if ($decoded->role === 'admin') {
+                    $bookingController->update($bookingId);
+                    } else {
+                        http_response_code(403);
+                        echo json_encode(["message" => "Forbidden: You must be an admin to update bookings"]);
+                    }
+                } else {
+                    http_response_code(401);
+                    echo json_encode(["message" => "Unauthorized: Invalid token"]);
+                }
+            } else {
+                http_response_code(401);
+                echo json_encode(["message" => "Unauthorized: No token provided"]);
+            }
+        } elseif($elements[0] == 'pointsofinterest' && isset($elements[1])) {
+            $headers = getallheaders();
+            $token = isset($headers['Authorization']) ? str_replace('Bearer ', '', $headers['Authorization']) : null;
+    
+            if ($token) {
+                $decoded = $jwtMiddleware->verifyToken($token);
+                if ($decoded) {
+                    $pointOfInterestId = $elements[1];
+                    if ($decoded->role === 'admin') {
+                        $pointOfInterestController->update($pointOfInterestId);
+                    } else {
+                        http_response_code(403);
+                        echo json_encode(["message" => "Forbidden: You must be an admin to update points of interest"]);
+                    }
+                } else {
+                    http_response_code(401);
+                    echo json_encode(["message" => "Unauthorized: Invalid token"]);
+                }
+            } else {
+                http_response_code(401);
+                echo json_encode(["message" => "Unauthorized: No token provided"]);
+            }
         }
         break;
     case 'DELETE':
@@ -160,6 +290,50 @@ switch($request_method) {
                     } else {
                         http_response_code(403);
                         echo json_encode(["message" => "Forbidden: You must be an admin to delete trails"]);
+                    }
+                } else {
+                    http_response_code(401);
+                    echo json_encode(["message" => "Unauthorized: Invalid token"]);
+                }
+            } else {
+                http_response_code(401);
+                echo json_encode(["message" => "Unauthorized: No token provided"]);
+            }
+        } elseif($elements[0] == 'bookings' && isset($elements[1])) {
+            $headers = getallheaders();
+            $token = isset($headers['Authorization']) ? str_replace('Bearer ', '', $headers['Authorization']) : null;
+
+            if ($token) {
+                $decoded = $jwtMiddleware->verifyToken($token);
+                if ($decoded) {
+                    $bookingId = $elements[1];
+                    if ($decoded->role === 'admin') {
+                        $bookingController->delete($bookingId);
+                    } else {
+                        http_response_code(403);
+                        echo json_encode(["message" => "Forbidden: You must be an admin to delete bookings"]);
+                    }
+                } else {
+                    http_response_code(401);
+                    echo json_encode(["message" => "Unauthorized: Invalid token"]);
+                }
+            } else {
+                http_response_code(401);
+                echo json_encode(["message" => "Unauthorized: No token provided"]);
+            }
+        } elseif($elements[0] == 'pointsofinterest' && isset($elements[1])) {
+            $headers = getallheaders();
+            $token = isset($headers['Authorization']) ? str_replace('Bearer ', '', $headers['Authorization']) : null;
+    
+            if ($token) {
+                $decoded = $jwtMiddleware->verifyToken($token);
+                if ($decoded) {
+                    $pointOfInterestId = $elements[1];
+                    if ($decoded->role === 'admin') {
+                        $pointOfInterestController->delete($pointOfInterestId);
+                    } else {
+                        http_response_code(403);
+                        echo json_encode(["message" => "Forbidden: You must be an admin to delete points of interest"]);
                     }
                 } else {
                     http_response_code(401);

@@ -14,6 +14,7 @@ class User {
     public $browsingHistory;
     public $gpsHistory;
     public $admin;
+    public $image_path;
     public $createdAt;
     public $modifiedAt;
 

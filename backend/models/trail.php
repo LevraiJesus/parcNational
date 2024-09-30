@@ -17,6 +17,9 @@ class Trail {
     public $estimatedTime;
     public $trailType;
     public $seasonAvailability;
+    public $image_path;
+    public $createdAt;
+    public $modifiedAt;
 
     public function __construct($db) {
         $this->conn = $db;
@@ -159,20 +162,30 @@ class Trail {
     }
 
     private function sanitize() {
-        $this->name = htmlspecialchars(strip_tags($this->name));
-        $this->longitudeStart = floatval($this->longitudeStart);
-        $this->longitudeEnd = floatval($this->longitudeEnd);
-        $this->latitudeStart = floatval($this->latitudeStart);
-        $this->latitudeEnd = floatval($this->latitudeEnd);
-        $this->distance = floatval($this->distance);
-        $this->heightDiff = floatval($this->heightDiff);
-        $this->pointOfInterest = htmlspecialchars(strip_tags($this->pointOfInterest));
-        $this->camping = filter_var($this->camping, FILTER_VALIDATE_BOOLEAN);
-        $this->difficulty = htmlspecialchars(strip_tags($this->difficulty));
-        $this->estimatedTime = htmlspecialchars(strip_tags($this->estimatedTime));
-        $this->trailType = htmlspecialchars(strip_tags($this->trailType));
-        $this->seasonAvailability = htmlspecialchars(strip_tags($this->seasonAvailability));
+        $this->name = $this->name !== null ? htmlspecialchars(strip_tags($this->name)) : null;
+        $this->longitudeStart = $this->longitudeStart !== null ? floatval($this->longitudeStart) : null;
+        $this->longitudeEnd = $this->longitudeEnd !== null ? floatval($this->longitudeEnd) : null;
+        $this->latitudeStart = $this->latitudeStart !== null ? floatval($this->latitudeStart) : null;
+        $this->latitudeEnd = $this->latitudeEnd !== null ? floatval($this->latitudeEnd) : null;
+        $this->distance = $this->distance !== null ? floatval($this->distance) : null;
+        $this->heightDiff = $this->heightDiff !== null ? floatval($this->heightDiff) : null;
+        if (is_array($this->pointOfInterest)) {
+            $this->pointOfInterest = array_map('intval', $this->pointOfInterest);
+        } else {
+            $this->pointOfInterest = $this->pointOfInterest !== null ? htmlspecialchars(strip_tags($this->pointOfInterest)) : null;
+        }
+        
+        if (is_array($this->camping)) {
+            $this->camping = array_map('intval', $this->camping);
+        } else {
+            $this->camping = $this->camping !== null ? filter_var($this->camping, FILTER_VALIDATE_BOOLEAN) : null;
+        }
+        $this->difficulty = $this->difficulty !== null ? htmlspecialchars(strip_tags($this->difficulty)) : null;
+        $this->estimatedTime = $this->estimatedTime !== null ? htmlspecialchars(strip_tags($this->estimatedTime)) : null;
+        $this->trailType = $this->trailType !== null ? htmlspecialchars(strip_tags($this->trailType)) : null;
+        $this->seasonAvailability = $this->seasonAvailability !== null ? htmlspecialchars(strip_tags($this->seasonAvailability)) : null;
     }
+    
 
     private function validateData() {
         if (!$this->name || strlen($this->name) > 255) return false;
@@ -193,13 +206,16 @@ class Trail {
         $stmt->bindParam(":latitudeEnd", $this->latitudeEnd);
         $stmt->bindParam(":distance", $this->distance);
         $stmt->bindParam(":heightDiff", $this->heightDiff);
-        $stmt->bindParam(":pointOfInterest", $this->pointOfInterest);
-        $stmt->bindParam(":camping", $this->camping, PDO::PARAM_BOOL);
+        $pointOfInterestString = is_array($this->pointOfInterest) ? implode(',', $this->pointOfInterest) : $this->pointOfInterest;
+        $stmt->bindParam(":pointOfInterest", $pointOfInterestString);
+        $campingString = is_array($this->camping) ? implode(',', $this->camping) : $this->camping;
+        $stmt->bindParam(":camping", $campingString);
         $stmt->bindParam(":difficulty", $this->difficulty);
         $stmt->bindParam(":estimatedTime", $this->estimatedTime);
         $stmt->bindParam(":trailType", $this->trailType);
         $stmt->bindParam(":seasonAvailability", $this->seasonAvailability);
     }
+    
 
     private function populateTrailData($row) {
         $this->id = $row['id'];
@@ -210,8 +226,8 @@ class Trail {
         $this->latitudeEnd = $row['latitudeEnd'];
         $this->distance = $row['distance'];
         $this->heightDiff = $row['heightDiff'];
-        $this->pointOfInterest = $row['pointOfInterest'];
-        $this->camping = $row['camping'];
+        $this->pointOfInterest = explode(',', $row['pointOfInterest']);
+        $this->camping = explode(',', $row['camping']);
         $this->difficulty = $row['difficulty'];
         $this->estimatedTime = $row['estimatedTime'];
         $this->trailType = $row['trailType'];

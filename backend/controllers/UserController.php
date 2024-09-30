@@ -17,6 +17,12 @@ class UserController {
         $this->user->name = $data->name;
         $this->user->firstname = $data->firstname;
         $this->user->phoneNumber = $data->phoneNumber;
+        if(isset($_FILES['image'])) {
+            $uploadedFilePath = FileUploadHelper::uploadFile($_FILES['image'], 'uploads/user/');
+            if ($uploadedFilePath) {
+                $this->user->image_path = $uploadedFilePath;
+            }
+        }
         $this->user->admin = $data->admin ?? false;
     
         if($this->user->create()) {
@@ -48,6 +54,12 @@ class UserController {
         $this->user->name = $data->name;
         $this->user->firstname = $data->firstname;
         $this->user->phoneNumber = $data->phoneNumber;
+        if(isset($_FILES['image'])) {
+            $uploadedFilePath = FileUploadHelper::uploadFile($_FILES['image'], 'uploads/users/');
+            if ($uploadedFilePath) {
+                $this->user->image_path = $uploadedFilePath;
+            }
+        }
         $this->user->admin = $data->admin ?? false;
     
         if($this->user->update()) {

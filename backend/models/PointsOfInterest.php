@@ -8,36 +8,36 @@ class PointOfInterest {
     public $id;
     public $name;
     public $type;
-    public $location;
+    public $latitude;
+    public $longitude;
     public $description;
+    public $image_path;
+    public $createdAt;
+    public $modifiedAt;
 
     public function __construct($db) {
         $this->conn = $db;
     }
 
     public function create() {
-        error_log("PointOfInterest model: create method called");
         $query = "INSERT INTO " . $this->table_name . " 
-                  SET name=:name, type=:type, location=:location, description=:description, 
+                  SET name=:name, type=:type, latitude=:latitude, longitude=:longitude, description=:description, 
                       created_at=NOW(), modified_at=NOW()";
 
         $stmt = $this->conn->prepare($query);
-        error_log("Prepared query: " . $query);
 
         $this->sanitize();
 
         $stmt->bindParam(":name", $this->name);
         $stmt->bindParam(":type", $this->type);
-        $stmt->bindParam(":location", $this->location);
+        $stmt->bindParam(":latitude", $this->latitude);
+        $stmt->bindParam(":longitude", $this->longitude);
         $stmt->bindParam(":description", $this->description);
-
-        error_log("Bound parameters: " . print_r([$this->name, $this->type, $this->location, $this->description], true));
 
         if ($stmt->execute()) {
             error_log("PointOfInterest model: PointOfInterest created");
             return true;
         }
-        error_log("PointOfInterest model: PointOfInterest creation failed");
         return false;
     }
 
@@ -54,7 +54,8 @@ class PointOfInterest {
             $this->id = $row['id'];
             $this->name = $row['name'];
             $this->type = $row['type'];
-            $this->location = $row['location'];
+            $this->latitude = $rom['latitude'];
+            $this->longitude = $rom['longitude'];
             $this->description = $row['description'];
             return true;
         }
@@ -64,7 +65,7 @@ class PointOfInterest {
 
     public function update() {
         $query = "UPDATE " . $this->table_name . " 
-                  SET name=:name, type=:type, location=:location, description=:description, modified_at=NOW() 
+                  SET name=:name, type=:type, latitude=:latitude, longitude=:longitude,description=:description, modified_at=NOW() 
                   WHERE id=:id";
                 
         $stmt = $this->conn->prepare($query);
@@ -74,15 +75,14 @@ class PointOfInterest {
         $stmt->bindParam(":id", $this->id);
         $stmt->bindParam(":name", $this->name);
         $stmt->bindParam(":type", $this->type);
-        $stmt->bindParam(":location", $this->location);
+        $stmt->bindParam(":latitude", $this->latitude);
+        $stmt->bindParam(":longitude", $this->longitude);
         $stmt->bindParam(":description", $this->description);
 
         if ($stmt->execute()) {
-            error_log("PointOfInterest model: PointOfInterest updated");
             return true;
         }
 
-        error_log("PointOfInterest model: PointOfInterest update failed");
         return false;
     }
 
@@ -93,18 +93,23 @@ class PointOfInterest {
         $stmt->bindParam(":id", $id);
 
         if ($stmt->execute()) {
-            error_log("PointOfInterest model: PointOfInterest deleted");
             return true;
         }
-
-        error_log("PointOfInterest model: PointOfInterest deletion failed");
         return false;
     }
+
+    public function getAllPointsOfInterest() {
+        $query = "SELECT * FROM " . $this->table_name;
+        $stmt = $this->conn->prepare($query);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+    
 
     private function sanitize() {
         $this->name = htmlspecialchars(strip_tags($this->name));
         $this->type = htmlspecialchars(strip_tags($this->type));
-        $this->location = htmlspecialchars(strip_tags($this->location));
+        $this->latitude = htmlspecialchars(strip_tags($this->latitude));
+        $this->longitude = htmlspecialchars(strip_tags($this->longitude));
         $this->description = htmlspecialchars(strip_tags($this->description));
-    }
-}
+    }}
