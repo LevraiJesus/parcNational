@@ -1,5 +1,7 @@
 <?php
-require_once '../models/trail.php';
+namespace Skand\Backend\Controllers;
+use Skand\Backend\Models\Trail;
+use Skand\Backend\helpers\FileUploadHelper;
 
 class TrailController {
     private $trail;

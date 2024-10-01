@@ -1,6 +1,7 @@
 <?php
-require_once '../models/PointsOfInterest.php';
-require_once '../helpers/FileUploaderHelper.php';
+namespace Skand\Backend\Controllers;
+use Skand\Backend\Models\PointOfInterest;
+use Skand\Backend\helpers\FileUploadHelper;
 
 class PointOfInterestController {
     private $pointOfInterest;

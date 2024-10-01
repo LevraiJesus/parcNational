@@ -1,5 +1,6 @@
 <?php
-require_once '../models/Booking.php';
+namespace Skand\Backend\Controllers;
+use Skand\Backend\Models\Booking;
 
 class BookingController {
     private $booking;

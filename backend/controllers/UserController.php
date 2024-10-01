@@ -1,5 +1,7 @@
 <?php
-require_once '../models/User.php';
+namespace Skand\Backend\Controllers;
+use Skand\Backend\Models\User;
+use Skand\Backend\helpers\FileUploadHelper;
 use Firebase\JWT\JWT;
 
 class UserController {

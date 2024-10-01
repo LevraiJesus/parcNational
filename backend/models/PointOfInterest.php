@@ -1,4 +1,8 @@
 <?php
+namespace Skand\Backend\Models;
+
+use PDO;
+
 use Firebase\JWT\JWT;
 
 class PointOfInterest {

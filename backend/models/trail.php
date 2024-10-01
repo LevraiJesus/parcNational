@@ -1,4 +1,7 @@
 <?php
+namespace Skand\Backend\Models;
+use PDO;
+
 class Trail {
     private $conn;
     private $table_name = "trail";

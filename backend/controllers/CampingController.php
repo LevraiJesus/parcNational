@@ -1,6 +1,7 @@
 <?php
-require_once '../models/Camping.php';
-require_once '../helpers/FileUploaderHelper.php';
+namespace Skand\Backend\Controllers;
+use Skand\Backend\Models\Camping;
+use Skand\Backend\Models\FileUploadHelper;
 
 class CampingController {
     private $camping;
