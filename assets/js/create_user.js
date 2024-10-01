@@ -13,7 +13,7 @@ document.querySelector('#signup-form').addEventListener('submit', function(e) {
 
   
 
-  fetch('./users', {
+  fetch('http://localhost:8000/users', {
     method: 'POST',
     body: json,
     headers: {
