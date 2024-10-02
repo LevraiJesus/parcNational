@@ -24,7 +24,13 @@ $request_uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $path = ltrim($request_uri, '/');
 $elements = explode('/', $path);
 
-// Route the request
+// routes :
+// http://localhost:8000/pointsofinterest/
+// http://localhost:8000/users/
+// http://localhost:8000/login/
+// http://localhost:8000/campings/
+// http://localhost:8000/trails/
+// http://localhost:8000/bookings/
 switch($request_method) {
     case 'GET':
         if (empty($elements[0])) {
