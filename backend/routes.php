@@ -1,10 +1,10 @@
 <?php
 require_once 'config/dp.php';
-require_once 'controllers/UserController.php';
-require_once 'controllers/CampingController.php';
-require_once 'controllers/TrailController.php';
-require_once 'controllers/BookingController.php';
-require_once 'controllers/PointOfInterestController.php';
+use Skand\Backend\Controllers\UserController;
+use Skand\Backend\Controllers\CampingController;
+use Skand\Backend\Controllers\TrailController;
+use Skand\Backend\Controllers\BookingController;
+use Skand\Backend\Controllers\PointOfInterestController;
 require_once 'middlewares/JWTMiddleware.php';
 
 $database = new Database();
