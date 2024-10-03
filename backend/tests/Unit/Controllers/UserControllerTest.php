@@ -86,16 +86,16 @@ class UserControllerTest extends TestCase
 
     public function testLoginSuccess()
     {
+        $_SERVER['REQUEST_METHOD'] = 'POST';
+        $_SERVER['CONTENT_TYPE'] = 'application/json';
+
         $inputData = json_encode([
             'email' => 'test@example.com',
             'password' => 'password123'
         ]);
 
-        // Simulate the input stream
-        $stream = fopen('php://input', 'w+');
-        fwrite($stream, $inputData);
-        rewind($stream);
-
+        file_put_contents('php://input', $inputData);
+    
         // Mock the User class
         $userMock = $this->createMock(User::class);
         $userMock->expects($this->once())
@@ -109,33 +109,33 @@ class UserControllerTest extends TestCase
                 'firstname' => 'Test',
                 'admin' => false
             ]);
-
+    
         $userMock->expects($this->once())
             ->method('generateJWT')
             ->willReturn('mocked_jwt_token');
-
+    
         // Set the mocked User object in the controller
         $reflection = new \ReflectionClass($this->userController);
         $property = $reflection->getProperty('user');
         $property->setAccessible(true);
         $property->setValue($this->userController, $userMock);
-
+    
         // Capture the output
         ob_start();
         $this->userController->login();
         $output = ob_get_clean();
-
+    
         // Assert the output
         $this->assertEquals(
             json_encode(["message" => "Login successful", "token" => "mocked_jwt_token"]),
             $output,
             "Login output doesn't match expected value"
         );
-
+    
         // Assert the status code
         $this->assertEquals(200, http_response_code(), "HTTP status code is not 200");
     }
-
+    
 
 
 
