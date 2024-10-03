@@ -153,6 +153,7 @@ class User {
             'email' => $this->email,
             'name' => $this->name,
             'firstname' => $this->firstname,
+            'phoneNumber' => $this->phoneNumber,
             'role' => $this->admin ? 'admin' : 'user',
             'iat' => $issuedAt,
             'exp' => $expirationTime

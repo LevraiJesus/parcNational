@@ -94,6 +94,7 @@ class UserController {
                 $this->user->email = $user['email'];
                 $this->user->name = $user['name'];
                 $this->user->firstname = $user['firstname'];
+                $this->user->phoneNumber = $user['phoneNumber'];
                 $this->user->admin = $user['admin'];
     
                 $token = $this->user->generateJWT();

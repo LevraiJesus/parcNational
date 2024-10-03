@@ -22,6 +22,7 @@ function Login({ setUser }) {
       const decodedToken = jwtDecode(token);
       console.log('Decoded token:', decodedToken);
       
+      
       // Set the user state with the decoded payload
       setUser(decodedToken);
       
