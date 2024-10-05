@@ -11,7 +11,6 @@ class Camping {
     public $longitude;
     public $latitude;
     public $description;
-    public $image;
     public $price;
     public $capacity;
     public $closeTrails;
@@ -25,7 +24,7 @@ class Camping {
     }
 
     public function create() {
-        $query = "INSERT INTO " . $this->table_name . " SET name=:name, longitude=:longitude, latitude=:latitude, description=:description, price=:price, capacity=:capacity, closeTrails=:closeTrails, created_at=NOW(), modified_at=NOW()";
+        $query = "INSERT INTO " . $this->table_name . " SET name=:name, longitude=:longitude, latitude=:latitude, description=:description, price=:price, capacity=:capacity, closeTrails=:closeTrails, image_path=:image_path, created_at=NOW(), modified_at=NOW()";
     
         $stmt = $this->conn->prepare($query);
     
@@ -39,14 +38,15 @@ class Camping {
         $stmt->bindParam(":capacity", $this->capacity);
         $closeTrailsString = is_array($this->closeTrails) ? implode(',', $this->closeTrails) : $this->closeTrails;
         $stmt->bindParam(":closeTrails", $closeTrailsString);
+        $stmt->bindParam(":image_path", $this->image_path);
     
         if ($stmt->execute()) {
+            $this->id = $this->conn->lastInsertId();
             return true;
         }
     
         return false;
     }
-    
     
 
     public function read($id) {
@@ -64,7 +64,6 @@ class Camping {
             $this->longitude = $row['longitude'];
             $this->latitude = $row['latitude'];
             $this->description = $row['description'];
-            $this->image = $row['image'];
             $this->price = $row['price'];
             $this->capacity = $row['capacity'];
             $this->closeTrails = $row['closeTrails'] ? explode(',', $row['closeTrails']) : null;
@@ -105,16 +104,33 @@ class Camping {
         }
         return false;
     }
+
+    public function find($id) {
+        $query = "SELECT * FROM " . $this->table_name . " WHERE id = :id";
+        $stmt = $this->conn->prepare($query);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+    
+    
+
     public function delete($id) {
         $query = "DELETE FROM " . $this->table_name . " WHERE id = ?";
-
+    
         $stmt = $this->conn->prepare($query);
         $stmt->bindParam(1, $id);
-        if ($stmt->execute()) {
-            return true;
+    
+        try {
+            if ($stmt->execute()) {
+                return true;
+            }
+        } catch (PDOException $e) {
+            return false;
         }
-        return false;
     }
+    
+
 
     public function getAllCampings(){
         $query = "SELECT * FROM " . $this->table_name;
@@ -130,9 +146,9 @@ class Camping {
         $this->longitude = $this->longitude ? htmlspecialchars(strip_tags($this->longitude)) : null;
         $this->latitude = $this->latitude ? htmlspecialchars(strip_tags($this->latitude)) : null;
         $this->description = $this->description ? htmlspecialchars(strip_tags($this->description)) : null;
-        $this->image = $this->image ? htmlspecialchars(strip_tags($this->image)) : null;
         $this->price = $this->price ? htmlspecialchars(strip_tags($this->price)) : null;
         $this->capacity = $this->capacity ? htmlspecialchars(strip_tags($this->capacity)) : null;
+        $this->image_path = $this->image_path ? htmlspecialchars(strip_tags($this->image_path)) : null;
         if (is_array($this->closeTrails)) {
             $this->closeTrails = json_encode($this->closeTrails);
         } else {

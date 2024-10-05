@@ -20,6 +20,7 @@ class ComposerStaticInit08ccf935e9bf0589244d13eca3f443d4
             'Symfony\\Polyfill\\Php80\\' => 23,
             'Symfony\\Polyfill\\Mbstring\\' => 26,
             'Symfony\\Polyfill\\Ctype\\' => 23,
+            'Skand\\Backend\\helpers\\' => 22,
             'Skand\\Backend\\Models\\' => 21,
             'Skand\\Backend\\Controllers\\' => 26,
             'Skand\\Backend\\' => 14,
@@ -56,6 +57,10 @@ class ComposerStaticInit08ccf935e9bf0589244d13eca3f443d4
         'Symfony\\Polyfill\\Ctype\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-ctype',
+        ),
+        'Skand\\Backend\\helpers\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/helpers',
         ),
         'Skand\\Backend\\Models\\' => 
         array (

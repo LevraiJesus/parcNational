@@ -1,7 +1,8 @@
 <?php
 namespace Skand\Backend\Controllers;
 use Skand\Backend\Models\Camping;
-use Skand\Backend\Models\FileUploadHelper;
+use Skand\Backend\helpers\FileUploaderHelper;
+
 
 class CampingController {
     private $camping;
@@ -11,29 +12,34 @@ class CampingController {
     }
 
     public function create() {
-        $data = json_decode(file_get_contents("php://input"));
-
-        if (!$data) {
-            http_response_code(400);
-            echo json_encode(array("message" => "Invalid or empty request body"));
-            return;
+        $isMultipart = strpos($_SERVER["CONTENT_TYPE"], "multipart/form-data") !== false;
+    
+        if ($isMultipart) {
+            $data = $_POST;
+            $this->camping->name = $data['name'] ?? null;
+            $this->camping->longitude = $data['longitude'] ?? null;
+            $this->camping->latitude = $data['latitude'] ?? null;
+            $this->camping->description = $data['description'] ?? null;
+            $this->camping->price = $data['price'] ?? null;
+            $this->camping->capacity = $data['capacity'] ?? null;
+        } else {
+            $data = json_decode(file_get_contents("php://input"));
+            $this->camping->name = $data->name ?? null;
+            $this->camping->longitude = $data->longitude ?? null;
+            $this->camping->latitude = $data->latitude ?? null;
+            $this->camping->description = $data->description ?? null;
+            $this->camping->price = $data->price ?? null;
+            $this->camping->capacity = $data->capacity ?? null;
         }
-
-        $this->camping->name = $data->name ?? null;
-        $this->camping->longitude = $data->longitude ?? null;
-        $this->camping->latitude = $data->latitude ?? null;
-        $this->camping->description = $data->description ?? null;
-        $this->camping->price = $data->price ?? null;
-        $this->camping->capacity = $data->capacity ?? null;
-
-        if(isset($_FILES['image'])) {
-            $uploadedFilePath = FileUploadHelper::uploadFile($_FILES['image'], 'uploads/campings/');
+    
+        if (isset($_FILES['image'])) {
+            $uploadedFilePath = FileUploaderHelper::uploadFile($_FILES['image'], 'uploads/campings/');
             if ($uploadedFilePath) {
                 $this->camping->image_path = $uploadedFilePath;
             }
         }
-
-        if($this->camping->create()) {
+    
+        if ($this->camping->create()) {
             http_response_code(201);
             echo json_encode(array("message" => "Camping was created."));
         } else {
@@ -41,6 +47,7 @@ class CampingController {
             echo json_encode(array("message" => "Unable to create camping."));
         }
     }
+    
 
 
     public function read($id) {
@@ -92,8 +99,7 @@ class CampingController {
     }
 
     public function delete($id) {
-        $this->camping->id = $id;
-        if($this->camping->delete()) {
+        if($this->camping->delete($id)) {
             http_response_code(200);
             echo json_encode(array("message" => "CONTROLLER : Camping was deleted."));
         } else {

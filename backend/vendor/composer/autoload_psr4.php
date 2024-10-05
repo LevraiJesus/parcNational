@@ -9,6 +9,7 @@ return array(
     'Symfony\\Polyfill\\Php80\\' => array($vendorDir . '/symfony/polyfill-php80'),
     'Symfony\\Polyfill\\Mbstring\\' => array($vendorDir . '/symfony/polyfill-mbstring'),
     'Symfony\\Polyfill\\Ctype\\' => array($vendorDir . '/symfony/polyfill-ctype'),
+    'Skand\\Backend\\helpers\\' => array($baseDir . '/helpers'),
     'Skand\\Backend\\Models\\' => array($baseDir . '/models'),
     'Skand\\Backend\\Controllers\\' => array($baseDir . '/controllers'),
     'Skand\\Backend\\' => array($baseDir . '/src'),

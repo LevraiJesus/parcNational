@@ -1,5 +1,8 @@
 <?php
-class FileUploadHelper {
+namespace Skand\Backend\helpers;
+
+
+class FileUploaderHelper {
     public static function uploadFile($file, $targetDir = 'uploads/') {
         $targetFile = $targetDir . basename($file["name"]);
         $imageFileType = strtolower(pathinfo($targetFile, PATHINFO_EXTENSION));

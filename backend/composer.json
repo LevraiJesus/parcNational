@@ -4,7 +4,8 @@
         "psr-4": {
             "Skand\\Backend\\": "src/",
             "Skand\\Backend\\Models\\": "models/",
-            "Skand\\Backend\\Controllers\\": "controllers/"
+            "Skand\\Backend\\Controllers\\": "controllers/",
+            "Skand\\Backend\\helpers\\": "helpers"
         }
     },
     "authors": [
